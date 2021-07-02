@@ -1,8 +1,13 @@
-const { response } = require('express');
-const express = require('express');
-const app = express();
+const { response } = require('express')
+const express = require('express')
+const app = express()
 app.use(express.json())
-const PORT = 3001;
+const morgan = require('morgan')
+const PORT = 3001
+
+app.use(morgan('combined'))
+morgan('tiny')
+
 
 let persons = 
 [
@@ -27,6 +32,8 @@ let persons =
       "number": "39-23-6423122"
     }
 ];
+
+
 
 app.get('/', (req, res) => {
     res.send('Working');
@@ -69,10 +76,6 @@ const generateId = () => {
 
 app.post('/api/persons', (req, res) => {
    const person = req.body
-//    person.id = generateId()
-//    persons = persons.concat(person)
-//    res.json(persons)
-
     const nameExists = persons.find(p => p.name === person.name)
 
     if (!person.name) {
@@ -80,7 +83,7 @@ app.post('/api/persons', (req, res) => {
             error: 'name is missing'
         })
     } else if (nameExists) {
-        return res.status(404).json({
+        return res.status(400).json({
             error: 'name already exists'
         })
     } else if (!person.number) {
