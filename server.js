@@ -2,8 +2,11 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 const morgan = require('morgan')
+const cors = require('cors')
 const PORT = process.env.PORT || 3001
 
+app.use(cors())
+app.use(express.static('build'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
 morgan.token('data', (req, res) => {
@@ -42,7 +45,7 @@ let persons =
 
 
 app.get('/', (req, res) => {
-    res.send('Working');
+    res.send('Phonebook 3.9');
 });
 
 app.get('/api/persons', (req, res) => {
