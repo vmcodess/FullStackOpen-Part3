@@ -48,11 +48,11 @@ app.get('/', (req, res) => {
     res.send('Phonebook 3.9');
 });
 
-app.get('/api/persons', (req, res) => {
+app.get('/persons', (req, res) => {
     res.json(persons);
 });
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     const person = persons.find(person => person.id === id)
     
@@ -72,7 +72,7 @@ app.get('/info', (req, res) => {
     `)
 })
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     persons = persons.filter(person => person.id !== id)
 
@@ -83,7 +83,7 @@ const generateId = () => {
     return Math.floor(Math.random() * 100)
 } 
 
-app.post('/api/persons', (req, res) => {
+app.post('/persons', (req, res) => {
    const person = req.body
     const nameExists = persons.find(p => p.name === person.name)
 
