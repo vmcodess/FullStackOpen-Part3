@@ -69,12 +69,31 @@ const generateId = () => {
 
 app.post('/api/persons', (req, res) => {
    const person = req.body
-   const id = generateId()
-   person.id = id
-   persons = persons.concat(person)
-   res.json(persons)
+//    person.id = generateId()
+//    persons = persons.concat(person)
+//    res.json(persons)
+
+    const nameExists = persons.find(p => p.name === person.name)
+
+    if (!person.name) {
+        return res.status(404).json({
+            error: 'name is missing'
+        })
+    } else if (nameExists) {
+        return res.status(404).json({
+            error: 'name already exists'
+        })
+    } else if (!person.number) {
+        return res.status(404).json({
+            error: 'number is missing'
+        })
+    }
+
+    person.id = generateId()
+    persons = persons.concat(person)
+    res.json(persons)
 })
 
 app.listen(PORT, () => {
-console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 })
