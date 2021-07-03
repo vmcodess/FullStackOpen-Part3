@@ -106,6 +106,7 @@ app.post('/persons', (req, res) => {
     res.json(persons)
 })
 
+// deployed to heroku : success
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 })
