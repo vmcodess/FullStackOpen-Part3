@@ -45,7 +45,7 @@ let persons =
 
 
 app.get('/', (req, res) => {
-    res.send('Phonebook 3.9');
+    res.send('Phonebook Backend');
 });
 
 app.get('/persons', (req, res) => {
