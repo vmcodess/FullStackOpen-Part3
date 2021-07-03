@@ -6,7 +6,7 @@ const cors = require('cors')
 const PORT = process.env.PORT || 3001
 
 app.use(cors())
-app.use(express.static('build'))
+app.use(express.static('build')) // To serve static files such as images, CSS files, and JavaScript files.
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
 morgan.token('data', (req, res) => {
@@ -48,11 +48,11 @@ app.get('/', (req, res) => {
     res.send('Phonebook Backend');
 });
 
-app.get('/persons', (req, res) => {
+app.get('/api/persons', (req, res) => {
     res.json(persons);
 });
 
-app.get('/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     const person = persons.find(person => person.id === id)
     
@@ -72,7 +72,7 @@ app.get('/info', (req, res) => {
     `)
 })
 
-app.delete('/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     persons = persons.filter(person => person.id !== id)
 
@@ -83,7 +83,7 @@ const generateId = () => {
     return Math.floor(Math.random() * 100)
 } 
 
-app.post('/persons', (req, res) => {
+app.post('/api/persons', (req, res) => {
    const person = req.body
     const nameExists = persons.find(p => p.name === person.name)
 
