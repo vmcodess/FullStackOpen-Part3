@@ -74,10 +74,15 @@ app.get('/info', (req, res) => {
 });
 
 app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id);
-    persons = persons.filter(person => person.id !== id);
+    Person.findByIdAndDelete(req.params.id)
+    .then(() => {
+        console.log(`Successfully deleted User!`);
+        res.status(204).end()
+    })
+    .catch((err) => {
+        console.log(`Error deleting user: ${err}`);
+    })
 
-    res.status(204).end();
 });
 
 // I'm a bit confused.. 3.14 -> "At this point, you can choose to simply allow users to create all phonebook entries. 
