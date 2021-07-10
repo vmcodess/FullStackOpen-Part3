@@ -80,7 +80,10 @@ app.delete('/api/persons/:id', (req, res) => {
     res.status(204).end();
 });
 
-
+// I'm a bit confused.. 3.14 -> "At this point, you can choose to simply allow users to create all phonebook entries. 
+//                               At this stage, the phonebook can have multiple entries for a person with the same name."
+// 
+// In our frontend that we included in this repository (build), we would need to change the ability to add entries for a person with the same name?
 app.post('/api/persons', (req, res) => {
     const body = req.body;
 
