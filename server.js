@@ -50,10 +50,13 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === 'CastError' && error.kind === 'ObjectId') {
       return response.status(400).send({ error: 'malformatted id' })
-    } 
-
+    }  else if (error.name === 'ValidationError') {
+        console.log(`errorHandler validation error..`);
+        return res.status(400).json({ error: error.message })
+    }
     next(error)
 }
+
 app.use(errorHandler)
 
 app.get('/', (req, res) => {
@@ -99,11 +102,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 
 });
 
-// I'm a bit confused.. 3.14 -> "At this point, you can choose to simply allow users to create all phonebook entries. 
-//                               At this stage, the phonebook can have multiple entries for a person with the same name."
-// 
-// In our frontend that we included in this repository (build), we would need to change the ability to add entries for a person with the same name? (function AddName)
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body;
 
     if (!body.name) {
@@ -121,9 +120,17 @@ app.post('/api/persons', (req, res) => {
         number: body.number,
     })
 
-    person.save().then(savedPerson => {
-        res.json(savedPerson.toJSON())
+    person.save()
+    .then(newPerson => newPerson.toJSON())
+    .then(savedPerson => {
+        console.log('Person saved to database successfully! :)');
+        res.json(savedPerson)
     })
+    .catch(error => {
+        return res.status(400).json({
+            error: "name must be unique"
+        });
+    });
 });
 
 app.put('/api/persons/:id', (req, res, next) => {
