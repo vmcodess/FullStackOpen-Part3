@@ -21,7 +21,8 @@ morgan.token('data', (req, res) => {
     }
 });
 
-let persons = [
+let persons = 
+[
     {
       id: 1,
       name: "Arto Hellas",
@@ -42,7 +43,18 @@ let persons = [
       name: "Mary Poppendieck",
       number: "39-23-6423122"
     }
-  ]
+]
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError' && error.kind === 'ObjectId') {
+      return response.status(400).send({ error: 'malformatted id' })
+    } 
+
+    next(error)
+}
+app.use(errorHandler)
 
 app.get('/', (req, res) => {
     res.send('Phonebook Backend');
@@ -54,14 +66,16 @@ app.get('/api/persons', (req, res) => {
     })
 });
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
     Person.findById(req.params.id)
     .then(person => {
-        res.json(person)
+        if (person) {
+            res.json(person)
+        } else {
+            res.status(404).end()
+        }
     })
-    .catch((err) => {
-        console.log(`Error finding person by id: ${err}`);
-    })
+    .catch(error => next(error))
 });
 
 app.get('/info', (req, res) => {
@@ -73,22 +87,20 @@ app.get('/info', (req, res) => {
     `);
 });
 
-app.delete('/api/persons/:id', (req, res) => {
-    Person.findByIdAndDelete(req.params.id)
+app.delete('/api/persons/:id', (req, res, next) => {
+    Person.findByIdAndRemove(req.params.id)
     .then(() => {
         console.log(`Successfully deleted User!`);
         res.status(204).end()
     })
-    .catch((err) => {
-        console.log(`Error deleting user: ${err}`);
-    })
+    .catch(error => next(error))
 
 });
 
 // I'm a bit confused.. 3.14 -> "At this point, you can choose to simply allow users to create all phonebook entries. 
 //                               At this stage, the phonebook can have multiple entries for a person with the same name."
 // 
-// In our frontend that we included in this repository (build), we would need to change the ability to add entries for a person with the same name?
+// In our frontend that we included in this repository (build), we would need to change the ability to add entries for a person with the same name? (function AddName)
 app.post('/api/persons', (req, res) => {
     const body = req.body;
 
