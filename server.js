@@ -79,12 +79,14 @@ app.get('/api/persons/:id', (req, res, next) => {
 });
 
 app.get('/info', (req, res) => {
-    let numberOfEntries = persons.length;
-    let date = new Date();
-    res.send(`
-        Phonebook has info for ${numberOfEntries} people <br><br>
-        ${date}
-    `);
+    Person.find({}).then(data => {
+        let numberOfEntries = data.length
+        let date = new Date()
+        res.send(`
+            Phonebook has info for ${numberOfEntries} people <br><br>
+            ${date}
+        `)
+    })
 });
 
 app.delete('/api/persons/:id', (req, res, next) => {
