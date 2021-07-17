@@ -105,6 +105,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 app.post('/api/persons', (req, res, next) => {
     const body = req.body;
 
+    console.log(body);
     if (!body.name) {
         return res.status(404).json({
             error: 'name is missing'
@@ -126,11 +127,7 @@ app.post('/api/persons', (req, res, next) => {
         console.log('Person saved to database successfully! :)');
         res.json(savedPerson)
     })
-    .catch(error => {
-        return res.status(400).json({
-            error: "name must be unique"
-        });
-    });
+    .catch(error => next(error));
 });
 
 app.put('/api/persons/:id', (req, res, next) => {
