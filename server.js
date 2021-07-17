@@ -114,7 +114,7 @@ app.post('/api/persons', (req, res, next) => {
         return res.status(404).json({
             error: 'number is missing'
         });
-    };
+    }; 
 
     const person = new Person({
         name: body.name,
